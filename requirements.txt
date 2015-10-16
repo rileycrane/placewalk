@@ -1,0 +1,6 @@
+requests
+foursquare
+python-slugify
+redis
+factual-api
+git+https://github.com/Kongwtf/python-google-places
