@@ -227,6 +227,7 @@ class Place(object):
         self.logger        = logging.getLogger('placewalk')
         self.logger.addHandler(console)
         self.logger.setLevel(logging.INFO)
+        self.raw = {}
 
         if not (FOURSQUARE_CLIENT_ID or FOURSQUARE_CLIENT_SECRET
             or FACTUAL_V3_OAUTH_KEY or FACTUAL_V3_OAUTH_SECRET
@@ -276,6 +277,7 @@ class Place(object):
         # GOOGLE
         elif data_id and data_provider=='google':
             results = client_google.get_place(None,place_id=data_id)
+            results.get_details()
         elif data_id and data_provider=='factual':
             results = client_factual.get_row('places', data_id)
         # FOURSQUARE MATCH: lat/lng, name, phone
@@ -333,7 +335,7 @@ class Place(object):
                 results = results[0]
             else:
                 results = {}
-        self.raw = results
+        self.raw[data_provider] = results
         if isinstance(results, list):
             self.logger.error(self.combined())
         self.fetched[data_provider] = self.clean(self.format(results),filters=allowed_data)
